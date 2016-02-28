@@ -28,6 +28,7 @@ import org.walkmod.javalang.ast.stmt.BreakStmt;
 import org.walkmod.javalang.ast.stmt.Statement;
 import org.walkmod.javalang.ast.stmt.SwitchEntryStmt;
 import org.walkmod.javalang.ast.stmt.SwitchStmt;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 /**
@@ -36,7 +37,7 @@ import org.walkmod.walkers.VisitorContext;
  * @author mohanasundar.n
  *
  */
-public class AddSwitchDefaultCase extends CustomPluginAdapter {
+public class AddSwitchDefaultCase extends VoidVisitorAdapter<VisitorContext> {
 
 	/** The curly bracket. */
 	private boolean curlyBracket = true;

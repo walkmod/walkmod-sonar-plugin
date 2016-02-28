@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.walkmod.javalang.ast.expr.Expression;
 import org.walkmod.javalang.ast.expr.MethodCallExpr;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 /**
@@ -34,7 +35,7 @@ import org.walkmod.walkers.VisitorContext;
  *
  * @author mohanasundar.n
  */
-public class StringCheckOnLeft extends CustomPluginAdapter {
+public class StringCheckOnLeft extends VoidVisitorAdapter<VisitorContext> {
 
 	/*
 	 * (non-Javadoc)

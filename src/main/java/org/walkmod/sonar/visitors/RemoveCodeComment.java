@@ -29,6 +29,7 @@ import org.walkmod.javalang.ParseException;
 import org.walkmod.javalang.ast.Comment;
 import org.walkmod.javalang.ast.CompilationUnit;
 import org.walkmod.javalang.ast.LineComment;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 /**
@@ -36,7 +37,7 @@ import org.walkmod.walkers.VisitorContext;
  *
  * @author mohanasundar.n
  */
-public class RemoveCodeComment extends CustomPluginAdapter {
+public class RemoveCodeComment extends VoidVisitorAdapter<VisitorContext> {
 
    /** The start with list. */
    private List<String> startWithList;

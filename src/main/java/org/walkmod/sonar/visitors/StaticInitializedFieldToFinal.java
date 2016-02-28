@@ -43,6 +43,7 @@ import org.walkmod.javalang.ast.expr.IntegerLiteralExpr;
 import org.walkmod.javalang.ast.expr.LongLiteralExpr;
 import org.walkmod.javalang.ast.expr.NameExpr;
 import org.walkmod.javalang.ast.expr.NullLiteralExpr;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 /**
@@ -50,7 +51,7 @@ import org.walkmod.walkers.VisitorContext;
  *
  * @author mohanasundar.n
  */
-public class StaticInitializedFieldToFinal extends CustomPluginAdapter {
+public class StaticInitializedFieldToFinal extends VoidVisitorAdapter<VisitorContext> {
 
 	/** The m static fd. */
 	private Map<String, FieldDeclaration> mStaticFD;

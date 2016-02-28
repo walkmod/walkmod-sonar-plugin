@@ -33,6 +33,7 @@ import org.walkmod.javalang.ast.stmt.IfStmt;
 import org.walkmod.javalang.ast.stmt.Statement;
 import org.walkmod.javalang.ast.stmt.SwitchEntryStmt;
 import org.walkmod.javalang.ast.stmt.WhileStmt;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 /**
@@ -40,7 +41,7 @@ import org.walkmod.walkers.VisitorContext;
  *
  * @author mohanasundar.n
  */
-public class AddCurlyBrackets extends CustomPluginAdapter {
+public class AddCurlyBrackets extends VoidVisitorAdapter<VisitorContext> {
 
 	/** The disable list. */
 	private final List<String> disableList;

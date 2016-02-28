@@ -46,6 +46,7 @@ import org.walkmod.javalang.ast.stmt.WhileStmt;
 import org.walkmod.javalang.ast.type.ClassOrInterfaceType;
 import org.walkmod.javalang.ast.type.PrimitiveType;
 import org.walkmod.javalang.ast.type.PrimitiveType.Primitive;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.javalang.ast.type.ReferenceType;
 import org.walkmod.javalang.ast.type.Type;
 import org.walkmod.walkers.VisitorContext;
@@ -56,7 +57,7 @@ import org.walkmod.walkers.VisitorContext;
  * @author mohanasundar.n
  *
  */
-public class RemoveLiteralBoolean extends CustomPluginAdapter {
+public class RemoveLiteralBoolean extends VoidVisitorAdapter<VisitorContext> {
 
 	/**
 	 * Gets the expression.

@@ -27,6 +27,7 @@ import java.util.StringTokenizer;
 import org.walkmod.javalang.ast.CompilationUnit;
 import org.walkmod.javalang.ast.expr.BinaryExpr;
 import org.walkmod.javalang.ast.expr.Expression;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.sonar.utils.Util;
 import org.walkmod.walkers.VisitorContext;
 
@@ -36,7 +37,7 @@ import org.walkmod.walkers.VisitorContext;
  * @author mohanasundar.n
  *
  */
-public abstract class EqualsAndNotEqualsHandler extends CustomPluginAdapter {
+public abstract class EqualsAndNotEqualsHandler extends VoidVisitorAdapter<VisitorContext> {
 
 	/** The update equals. */
 	private boolean updateEquals;

@@ -25,6 +25,7 @@ import org.walkmod.javalang.ast.expr.MethodCallExpr;
 import org.walkmod.javalang.ast.expr.NameExpr;
 import org.walkmod.javalang.ast.expr.ObjectCreationExpr;
 import org.walkmod.javalang.ast.type.ClassOrInterfaceType;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 /**
@@ -33,7 +34,7 @@ import org.walkmod.walkers.VisitorContext;
  * @author mohanasundar.n
  *
  */
-public class PrimitiveInstantiationForToString extends CustomPluginAdapter {
+public class PrimitiveInstantiationForToString extends VoidVisitorAdapter<VisitorContext> {
 
 	/**
 	 * The Enum Wrappers.

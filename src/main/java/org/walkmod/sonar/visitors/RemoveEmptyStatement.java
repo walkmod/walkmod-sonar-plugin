@@ -25,6 +25,7 @@ import java.util.List;
 import org.walkmod.javalang.ast.stmt.BlockStmt;
 import org.walkmod.javalang.ast.stmt.EmptyStmt;
 import org.walkmod.javalang.ast.stmt.Statement;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 /**
@@ -32,7 +33,7 @@ import org.walkmod.walkers.VisitorContext;
  *
  * @author mohanasundar.n
  */
-public class RemoveEmptyStatement extends CustomPluginAdapter {
+public class RemoveEmptyStatement extends VoidVisitorAdapter<VisitorContext> {
 
 	/*
 	 * (non-Javadoc)

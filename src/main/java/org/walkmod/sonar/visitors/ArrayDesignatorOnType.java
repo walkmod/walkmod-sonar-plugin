@@ -28,6 +28,7 @@ import org.walkmod.javalang.ast.body.VariableDeclaratorId;
 import org.walkmod.javalang.ast.expr.VariableDeclarationExpr;
 import org.walkmod.javalang.ast.type.ReferenceType;
 import org.walkmod.javalang.ast.type.Type;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 /**
@@ -35,7 +36,7 @@ import org.walkmod.walkers.VisitorContext;
  *
  * @author mohanasundar.n
  */
-public class ArrayDesignatorOnType extends CustomPluginAdapter {
+public class ArrayDesignatorOnType extends VoidVisitorAdapter<VisitorContext> {
 
 	/*
 	 * (non-Javadoc)

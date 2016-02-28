@@ -29,6 +29,7 @@ import org.walkmod.javalang.ast.body.ClassOrInterfaceDeclaration;
 import org.walkmod.javalang.ast.body.MethodDeclaration;
 import org.walkmod.javalang.ast.body.ModifierSet;
 import org.walkmod.javalang.ast.stmt.BlockStmt;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 /**
@@ -37,7 +38,7 @@ import org.walkmod.walkers.VisitorContext;
  * @author mohanasundar.n
  *
  */
-public class RemoveEmptyMethod extends CustomPluginAdapter {
+public class RemoveEmptyMethod extends VoidVisitorAdapter<VisitorContext> {
 
 	/** The remove default. */
 	private boolean removeDefault;

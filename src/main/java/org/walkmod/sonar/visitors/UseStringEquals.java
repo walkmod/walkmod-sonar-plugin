@@ -20,25 +20,19 @@
 
 package org.walkmod.sonar.visitors;
 
-import static org.walkmod.sonar.utils.Util.BINARY_EQUALS_OPERATOR;
-import static org.walkmod.sonar.utils.Util.BINARY_NOT_EQUALS_OPERATOR;
-import static org.walkmod.sonar.utils.Util.UNARY_NOT_OPERATOR;
-import static org.walkmod.sonar.utils.Util.isStringLiteralExpr;
-
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.walkmod.javalang.ast.expr.BinaryExpr;
-import org.walkmod.javalang.ast.expr.BinaryExpr.Operator;
-import org.walkmod.javalang.ast.expr.ConditionalExpr;
-import org.walkmod.javalang.ast.expr.EnclosedExpr;
+import org.walkmod.javalang.ast.expr.CharLiteralExpr;
+import org.walkmod.javalang.ast.expr.DoubleLiteralExpr;
 import org.walkmod.javalang.ast.expr.Expression;
+import org.walkmod.javalang.ast.expr.IntegerLiteralExpr;
+import org.walkmod.javalang.ast.expr.LongLiteralExpr;
 import org.walkmod.javalang.ast.expr.MethodCallExpr;
+import org.walkmod.javalang.ast.expr.StringLiteralExpr;
 import org.walkmod.javalang.ast.expr.UnaryExpr;
-import org.walkmod.javalang.ast.stmt.DoStmt;
-import org.walkmod.javalang.ast.stmt.ForStmt;
-import org.walkmod.javalang.ast.stmt.IfStmt;
-import org.walkmod.javalang.ast.stmt.WhileStmt;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 /**
@@ -46,207 +40,52 @@ import org.walkmod.walkers.VisitorContext;
  *
  * @author mohanasundar.n
  */
-public class UseStringEquals extends EqualsAndNotEqualsHandler {
+public class UseStringEquals extends VoidVisitorAdapter<VisitorContext> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.metricstream.walkmod.plugin.visitors.EqualsAndNotEqualsHandler#isValidOperator(org.walkmod.javalang.ast.expr.
-	 * BinaryExpr)
-	 */
-	@Override
-	protected boolean isValidOperator(BinaryExpr e) {
-		Operator op = e.getOperator();
-		return op == BINARY_EQUALS_OPERATOR || op == BINARY_NOT_EQUALS_OPERATOR;
-	}
+   public void visit(BinaryExpr n, VisitorContext ctx) {
+      if (n.getOperator().equals(BinaryExpr.Operator.equals)) {
+         Expression left = n.getLeft();
+         Expression right = n.getRight();
+         if (isStringLiteralExpr(left)) {
+            List<Expression> args = new LinkedList<Expression>();
+            args.add(right);
+            n.getParentNode().replaceChildNode(n, new MethodCallExpr(left, "equals", args));
+         } else if (isStringLiteralExpr(right)) {
+            List<Expression> args = new LinkedList<Expression>();
+            args.add(left);
+            n.getParentNode().replaceChildNode(n, new MethodCallExpr(right, "equals", args));
+         }
+      } else if (n.getOperator().equals(BinaryExpr.Operator.notEquals)) {
+         Expression left = n.getLeft();
+         Expression right = n.getRight();
+         if (isStringLiteralExpr(left)) {
+            List<Expression> args = new LinkedList<Expression>();
+            args.add(right);
+            n.getParentNode().replaceChildNode(n,
+                  new UnaryExpr(new MethodCallExpr(left, "equals", args), UnaryExpr.Operator.not));
+         } else if (isStringLiteralExpr(right)) {
+            List<Expression> args = new LinkedList<Expression>();
+            args.add(left);
+            n.getParentNode().replaceChildNode(n,
+                  new UnaryExpr(new MethodCallExpr(right, "equals", args), UnaryExpr.Operator.not));
+         }
+      }
+      super.visit(n, ctx);
+   }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.metricstream.walkmod.plugin.visitors.EqualsAndNotEqualsHandler#applyChanges(org.walkmod.javalang.ast.expr.
-	 * BinaryExpr)
-	 */
-	@Override
-	protected Expression applyChanges(BinaryExpr e) {
-		Expression l = e.getLeft();
-		Expression r = e.getRight();
-		Operator op = e.getOperator();
-		Expression expression = null;
-		if (isStringLiteralExpr(r)) {
-			expression = applyEquals(r, l, op);
-		} else if (isStringLiteralExpr(l)) {
-			expression = applyEquals(l, r, op);
-		}
-		
-		return expression;
-	}
-
-	
-	/**
-	 * Apply equals.
-	 *
-	 * @param exp
-	 *            the exp
-	 * @param param
-	 *            the param
-	 * @param op
-	 *            the op
-	 * @return the expression
-	 */
-	private Expression applyEquals(Expression exp, Expression param, Operator op) {
-		Expression expression = null;
-		if (op == BINARY_EQUALS_OPERATOR) {
-			if (isUpdateEquals()) {
-				List<Expression> p = new ArrayList<Expression>();
-				p.add(param);
-				expression = new MethodCallExpr(exp, "equals", p);
-			}
-		} else if (op == BINARY_NOT_EQUALS_OPERATOR) {
-			if (isUpdateNotEquals()) {
-				List<Expression> p = new ArrayList<Expression>();
-				p.add(param);
-				MethodCallExpr callExpr = new MethodCallExpr(exp, "equals", p);
-				UnaryExpr unaryExpr = new UnaryExpr();
-				unaryExpr.setExpr(callExpr);
-				unaryExpr.setOperator(UNARY_NOT_OPERATOR);
-				expression = unaryExpr;
-			}
-		}
-		return expression;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.expr.EnclosedExpr,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(EnclosedExpr n, VisitorContext arg) {
-		Expression e = n.getInner();
-		if (e instanceof BinaryExpr) {
-			Expression expression = getMethodCallExpr((BinaryExpr) e);
-			if (expression != null) {
-				n.setInner(expression);
-			}
-		}
-		super.visit(n, arg);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.expr.BinaryExpr,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(BinaryExpr n, VisitorContext arg) {
-		Expression e = n.getLeft();
-		if (e instanceof BinaryExpr) {
-			Expression expression = getMethodCallExpr((BinaryExpr) e);
-			if (expression != null) {
-				n.setLeft(expression);
-			}
-		}
-		e = n.getRight();
-		if (e instanceof BinaryExpr) {
-			Expression expression = getMethodCallExpr((BinaryExpr) e);
-			if (expression != null) {
-				n.setRight(expression);
-			}
-		}
-		super.visit(n, arg);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.WhileStmt,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(WhileStmt n, VisitorContext arg) {
-		Expression e = n.getCondition();
-		if (e instanceof BinaryExpr) {
-			Expression expression = getMethodCallExpr((BinaryExpr) e);
-			if (expression != null) {
-				n.setCondition(expression);
-			}
-		}
-		super.visit(n, arg);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.DoStmt,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(DoStmt n, VisitorContext arg) {
-		Expression e = n.getCondition();
-		if (e instanceof BinaryExpr) {
-			Expression expression = getMethodCallExpr((BinaryExpr) e);
-			if (expression != null) {
-				n.setCondition(expression);
-			}
-		}
-		super.visit(n, arg);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.ForStmt,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(ForStmt n, VisitorContext arg) {
-		Expression e = n.getCompare();
-		if (e instanceof BinaryExpr) {
-			Expression expression = getMethodCallExpr((BinaryExpr) e);
-			if (expression != null) {
-				n.setCompare(expression);
-			}
-		}
-		super.visit(n, arg);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.IfStmt,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(IfStmt n, VisitorContext arg) {
-		Expression e = n.getCondition();
-		if (e instanceof BinaryExpr) {
-			Expression expression = getMethodCallExpr((BinaryExpr) e);
-			if (expression != null) {
-				n.setCondition(expression);
-			}
-		}
-		super.visit(n, arg);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.expr.ConditionalExpr,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(ConditionalExpr n, VisitorContext arg) {
-		Expression e = n.getCondition();
-		if (e instanceof BinaryExpr) {
-			Expression expression = getMethodCallExpr((BinaryExpr) e);
-			if (expression != null) {
-				n.setCondition(expression);
-			}
-		}
-		super.visit(n, arg);
-	}
+   /**
+    * Checks whether the given {@link Expression} is instance of {@link StringLiteralExpr}.
+    *
+    * @param e
+    *           The instance of {@link Expression}
+    * @return true, If is {@link StringLiteralExpr}
+    */
+   private boolean isStringLiteralExpr(Expression e) {
+      boolean isString = e instanceof StringLiteralExpr;
+      isString = isString && !(e instanceof CharLiteralExpr);
+      isString = isString && !(e instanceof DoubleLiteralExpr);
+      isString = isString && !(e instanceof IntegerLiteralExpr);
+      isString = isString && !(e instanceof LongLiteralExpr);
+      return isString;
+   }
 }

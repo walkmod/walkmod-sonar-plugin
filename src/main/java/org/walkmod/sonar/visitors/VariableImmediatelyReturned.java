@@ -20,8 +20,6 @@
 
 package org.walkmod.sonar.visitors;
 
-import static org.walkmod.sonar.utils.Util.ASSIGN_OPERATOR;
-
 import java.util.List;
 
 import org.walkmod.javalang.ast.body.VariableDeclarator;
@@ -90,7 +88,7 @@ public class VariableImmediatelyReturned extends VoidVisitorAdapter<VisitorConte
 					isEmpty = vars.isEmpty();
 				} else if (expression instanceof AssignExpr) {
 					AssignExpr assignExpr = (AssignExpr) expression;
-					if (assignExpr.getOperator() == ASSIGN_OPERATOR) {
+					if (assignExpr.getOperator() == AssignExpr.Operator.assign) {
 						Expression target = assignExpr.getTarget();
 						if (target instanceof NameExpr) {
 							NameExpr expr = (NameExpr) target;

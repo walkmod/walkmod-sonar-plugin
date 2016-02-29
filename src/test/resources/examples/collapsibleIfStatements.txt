@@ -1,0 +1,10 @@
+public class Foo{
+void bar() {
+    if (x) {            // original implementation
+        if (y) {
+            // do stuff
+        }
+    }
+}
+
+}

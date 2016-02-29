@@ -20,12 +20,6 @@
 
 package org.walkmod.sonar.visitors;
 
-import static org.walkmod.sonar.utils.Util.BINARY_AND_OPERATOR;
-import static org.walkmod.sonar.utils.Util.BINARY_EQUALS_OPERATOR;
-import static org.walkmod.sonar.utils.Util.BINARY_NOTEQUALS_OPERATOR;
-import static org.walkmod.sonar.utils.Util.BINARY_OR_OPERATOR;
-import static org.walkmod.sonar.utils.Util.UNARY_NOT_OPERATOR;
-
 import java.util.List;
 
 import org.walkmod.javalang.ast.body.FieldDeclaration;
@@ -46,9 +40,9 @@ import org.walkmod.javalang.ast.stmt.WhileStmt;
 import org.walkmod.javalang.ast.type.ClassOrInterfaceType;
 import org.walkmod.javalang.ast.type.PrimitiveType;
 import org.walkmod.javalang.ast.type.PrimitiveType.Primitive;
-import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.javalang.ast.type.ReferenceType;
 import org.walkmod.javalang.ast.type.Type;
+import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 /**
@@ -138,24 +132,24 @@ public class RemoveLiteralBoolean extends VoidVisitorAdapter<VisitorContext> {
 			right = temp;
 		}
 		if (((BooleanLiteralExpr) left).getValue()) {
-			if (op == BINARY_OR_OPERATOR) {
+			if (op == BinaryExpr.Operator.or) {
 				BooleanLiteralExpr expr = new BooleanLiteralExpr(true);
 				return expr;
-			} else if (op == BINARY_NOTEQUALS_OPERATOR) {
-				UnaryExpr expr = new UnaryExpr(right, UNARY_NOT_OPERATOR);
+			} else if (op == BinaryExpr.Operator.notEquals) {
+				UnaryExpr expr = new UnaryExpr(right, UnaryExpr.Operator.not);
 				return expr;
 			}
 			return getExpression(right);
 		} else {
-			if (op == BINARY_EQUALS_OPERATOR) {
+			if (op == BinaryExpr.Operator.equals) {
 				if (right instanceof InstanceOfExpr) {
 					EnclosedExpr enclosedExpr = new EnclosedExpr();
 					enclosedExpr.setInner(right);
 					right = enclosedExpr;
 				}
-				UnaryExpr expr = new UnaryExpr(right, UNARY_NOT_OPERATOR);
+				UnaryExpr expr = new UnaryExpr(right, UnaryExpr.Operator.not);
 				return expr;
-			} else if (op == BINARY_AND_OPERATOR) {
+			} else if (op == BinaryExpr.Operator.and) {
 				BooleanLiteralExpr expr = new BooleanLiteralExpr(false);
 				return expr;
 			}

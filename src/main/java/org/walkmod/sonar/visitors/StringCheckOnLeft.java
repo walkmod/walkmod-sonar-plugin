@@ -20,13 +20,16 @@
 
 package org.walkmod.sonar.visitors;
 
-import static org.walkmod.sonar.utils.Util.isStringLiteralExpr;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.walkmod.javalang.ast.expr.CharLiteralExpr;
+import org.walkmod.javalang.ast.expr.DoubleLiteralExpr;
 import org.walkmod.javalang.ast.expr.Expression;
+import org.walkmod.javalang.ast.expr.IntegerLiteralExpr;
+import org.walkmod.javalang.ast.expr.LongLiteralExpr;
 import org.walkmod.javalang.ast.expr.MethodCallExpr;
+import org.walkmod.javalang.ast.expr.StringLiteralExpr;
 import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
@@ -68,4 +71,13 @@ public class StringCheckOnLeft extends VoidVisitorAdapter<VisitorContext> {
 		}
 		super.visit(n, arg);
 	}
+	
+	private boolean isStringLiteralExpr(Expression e) {
+      boolean isString = e instanceof StringLiteralExpr;
+      isString = isString && !(e instanceof CharLiteralExpr);
+      isString = isString && !(e instanceof DoubleLiteralExpr);
+      isString = isString && !(e instanceof IntegerLiteralExpr);
+      isString = isString && !(e instanceof LongLiteralExpr);
+      return isString;
+   }
 }

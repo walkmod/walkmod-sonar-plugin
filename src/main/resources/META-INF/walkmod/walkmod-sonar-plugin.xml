@@ -52,4 +52,10 @@
 		id="org.walkmod:walkmod-sonar-plugin:DeclarationsShouldUseCollectionInterfaces"
 		class="org.walkmod.sonar.visitors.DeclarationsShouldUseCollectionInterfaces"></bean>
 
+	<bean id="org.walkmod:walkmod-sonar-plugin:RemoveUselessParentheses"
+		class="org.walkmod.sonar.visitors.RemoveUselessParentheses"></bean>
+
+	<bean id="org.walkmod:walkmod-sonar-plugin:RemoveUselessImports"
+		class="org.walkmod.sonar.visitors.RemoveUselessImports" />
+
 </beans>

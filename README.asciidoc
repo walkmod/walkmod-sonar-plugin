@@ -6,7 +6,7 @@ Raquel Pau <raquelpau@gmail.com>
 This is a http://www.walkmod.com[walkmod] plugin to automatically fix sonar rule violations. Currently, the supported rules are:
 
 ----
-- sonar:AddCurlyBrackets: 
+- sonar:AddCurlyBrackets
 - sonar:AddSwitchDefaultCase
 - sonar:ArrayDesignatorOnType
 - sonar:CollapsibleIfStatements

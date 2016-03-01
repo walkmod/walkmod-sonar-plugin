@@ -1,0 +1,59 @@
+walkmod-sonar-plugin 
+====================
+Raquel Pau <raquelpau@gmail.com>
+
+
+This is a http://www.walkmod.com[walkmod] plugin to automatically fix sonar rule violations. Currently, the supported rules are:
+
+----
+- sonar:AddCurlyBrackets: 
+- sonar:AddSwitchDefaultCase
+- sonar:ArrayDesignatorOnType
+- sonar:CollapsibleIfStatements
+- sonar:DeclarationsShouldUseCollectionInterfaces
+- sonar:LocalVarsShouldComplyWithNamingConventions
+- sonar:PrimitiveInstantiationForToString
+- sonar:RedundantCastsShouldNotBeUsed
+- sonar:RemoveCodeComment
+- sonar:RemoveEmptyMethod
+- sonar:RemoveEmptyStatement
+- sonar:RemoveLiteralBoolean
+- sonar:StaticInitializedFieldToFinal
+- sonar:StringCheckOnLeft
+- sonar:UseCollectionIsEmpty
+- sonar:UseStringEquals
+- sonar:VariableImmediatelyReturned
+----
+
+== Usage
+
+1) Verify that your walkmod version is > = 2.2.0
+
+2) Execute the following command to add this code transformation plugin as part of your conventions.
+
+----
+walkmod add sonar:CollapsibleIfStatements
+----
+
+3) Now, You see the results, executing: 
+
+----
+walkmod apply
+----
+
+Or, alternatively, you can also check which would be the modified classes typing:
+
+----
+walkmod check
+----
+
+== Contributing
+
+If you want to hack on this, fork it, improve it and send me a pull request.
+
+To get started using it, just clone it and call mvn install. 
+
+
+
+
+ 

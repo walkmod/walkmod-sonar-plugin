@@ -3,53 +3,59 @@
    "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-	<bean id="org.walkmod:walkmod-sonar-plugin:AddCurlyBrackets"
-		class="org.walkmod.sonar.visitors.AddCurlyBrackets"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:AddCurlyBrackets"
+        class="org.walkmod.sonar.visitors.AddCurlyBrackets"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:AddSwitchDefaultCase"
-		class="org.walkmod.sonar.visitors.AddSwitchDefaultCase"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:AddSwitchDefaultCase"
+        class="org.walkmod.sonar.visitors.AddSwitchDefaultCase"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:ArrayDesignatorOnType"
-		class="org.walkmod.sonar.visitors.ArrayDesignatorOnType"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:ArrayDesignatorOnType"
+        class="org.walkmod.sonar.visitors.ArrayDesignatorOnType"></bean>
 
-	<bean
-		id="org.walkmod:walkmod-sonar-plugin:PrimitiveInstantiationForToString"
-		class="org.walkmod.sonar.visitors.PrimitiveInstantiationForToString"></bean>
+    <bean
+        id="org.walkmod:walkmod-sonar-plugin:PrimitiveInstantiationForToString"
+        class="org.walkmod.sonar.visitors.PrimitiveInstantiationForToString"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:RemoveCodeComment"
-		class="org.walkmod.sonar.visitors.RemoveCodeComment"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:RemoveCodeComment"
+        class="org.walkmod.sonar.visitors.RemoveCodeComment"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:RemoveEmptyMethod"
-		class="org.walkmod.sonar.visitors.RemoveEmptyMethod"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:RemoveEmptyMethod"
+        class="org.walkmod.sonar.visitors.RemoveEmptyMethod"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:RemoveEmptyStatement"
-		class="org.walkmod.sonar.visitors.RemoveEmptyStatement"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:RemoveEmptyStatement"
+        class="org.walkmod.sonar.visitors.RemoveEmptyStatement"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:RemoveLiteralBoolean"
-		class="org.walkmod.sonar.visitors.RemoveLiteralBoolean"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:RemoveLiteralBoolean"
+        class="org.walkmod.sonar.visitors.RemoveLiteralBoolean"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:StaticInitializedFieldToFinal"
-		class="org.walkmod.sonar.visitors.StaticInitializedFieldToFinal"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:StaticInitializedFieldToFinal"
+        class="org.walkmod.sonar.visitors.StaticInitializedFieldToFinal"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:StringCheckOnLeft"
-		class="org.walkmod.sonar.visitors.StringCheckOnLeft"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:StringCheckOnLeft"
+        class="org.walkmod.sonar.visitors.StringCheckOnLeft"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:UseCollectionsIsEmpty"
-		class="org.walkmod.sonar.visitors.UseCollectionsIsEmpty"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:UseCollectionsIsEmpty"
+        class="org.walkmod.sonar.visitors.UseCollectionsIsEmpty"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:UseStringEquals" class="org.walkmod.sonar.visitors.UseStringEquals"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:UseStringEquals" class="org.walkmod.sonar.visitors.UseStringEquals"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:VariableImmediatelyReturned"
-		class="org.walkmod.sonar.visitors.VariableImmediatelyReturned"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:VariableImmediatelyReturned"
+        class="org.walkmod.sonar.visitors.VariableImmediatelyReturned"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:CollapsibleIfStatements"
-		class="org.walkmod.sonar.visitors.CollapsibleIfStatements"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:CollapsibleIfStatements"
+        class="org.walkmod.sonar.visitors.CollapsibleIfStatements"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:RedundantCastsShouldNotBeUsed"
-		class="org.walkmod.sonar.visitors.RedundantCastsShouldNotBeUsed"></bean>
+    <bean id="org.walkmod:walkmod-sonar-plugin:RedundantCastsShouldNotBeUsed"
+        class="org.walkmod.sonar.visitors.RedundantCastsShouldNotBeUsed"></bean>
 
-	<bean
-		id="org.walkmod:walkmod-sonar-plugin:DeclarationsShouldUseCollectionInterfaces"
-		class="org.walkmod.sonar.visitors.DeclarationsShouldUseCollectionInterfaces"></bean>
+    <bean
+        id="org.walkmod:walkmod-sonar-plugin:DeclarationsShouldUseCollectionInterfaces"
+        class="org.walkmod.sonar.visitors.DeclarationsShouldUseCollectionInterfaces"></bean>
+
+    <bean id="org.walkmod:walkmod-sonar-plugin:RemoveUselessParentheses"
+        class="org.walkmod.sonar.visitors.RemoveUselessParentheses"></bean>
+
+    <bean id="org.walkmod:walkmod-sonar-plugin:RemoveUselessImports"
+        class="org.walkmod.sonar.visitors.RemoveUselessImports" />
 
 </beans>

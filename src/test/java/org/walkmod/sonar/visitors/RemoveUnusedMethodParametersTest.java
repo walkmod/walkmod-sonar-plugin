@@ -50,6 +50,8 @@ public class RemoveUnusedMethodParametersTest extends SemanticTest {
       MethodCallExpr mce = (MethodCallExpr) stmt.getExpression();
       Assert.assertTrue(mce.getArgs().isEmpty());
       
+      System.out.println(cu.toString());
+      
    }
 
 }

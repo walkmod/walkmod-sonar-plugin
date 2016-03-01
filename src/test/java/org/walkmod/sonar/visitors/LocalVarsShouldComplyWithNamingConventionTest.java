@@ -26,6 +26,19 @@ public class LocalVarsShouldComplyWithNamingConventionTest extends SemanticTest{
       Assert.assertEquals("name", name);
    }
    
+   @Test
+   public void testBasicReplaceWithMax() throws Exception{
+      CompilationUnit cu = compile("public class Foo{ private int Max; }");
+      LocalVarsShouldComplyWithNamingConvention visitor = new LocalVarsShouldComplyWithNamingConvention();
+      cu.accept(visitor, null);
+      FieldDeclaration fd = (FieldDeclaration)cu.getTypes().get(0).getMembers().get(0);
+      
+      String name = fd.getVariables().get(0).getId().getName();
+      System.out.println(cu.toString());
+      
+      Assert.assertEquals("max", name);
+   }
+   
 
    @Test
    public void testBasicReplaceWithReferences() throws Exception{
@@ -47,6 +60,8 @@ public class LocalVarsShouldComplyWithNamingConventionTest extends SemanticTest{
       
       NameExpr value = (NameExpr) assign.getValue();
       Assert.assertEquals("name_", value.getName());
+      
+      System.out.println(cu.toString());
       
    }
 }

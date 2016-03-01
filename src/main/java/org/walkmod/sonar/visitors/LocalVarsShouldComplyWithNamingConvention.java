@@ -63,7 +63,7 @@ public class LocalVarsShouldComplyWithNamingConvention extends VoidVisitorAdapte
                result += Character.toUpperCase(letters[i]);
                toUpperCase = false;
             } else {
-               result += letters[i];
+               result += Character.toLowerCase(letters[i]);
             }
          }
       }

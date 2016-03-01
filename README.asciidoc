@@ -2,6 +2,7 @@ walkmod-sonar-plugin
 ====================
 Raquel Pau <raquelpau@gmail.com>
 
+image:https://travis-ci.org/walkmod/walkmod-sonar-plugin.svg?branch=master["Build Status", link="https://travis-ci.org/walkmod/walkmod-sonar-plugin"]
 
 This is a http://www.walkmod.com[walkmod] plugin to automatically fix sonar rule violations. Currently, the supported rules are:
 

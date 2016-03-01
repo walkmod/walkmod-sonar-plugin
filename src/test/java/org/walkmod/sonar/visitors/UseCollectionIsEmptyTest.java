@@ -29,7 +29,5 @@ public class UseCollectionIsEmptyTest extends SemanticTest {
       MethodCallExpr mce = (MethodCallExpr) returnStmt.getExpr();
       
       Assert.assertEquals("isEmpty", mce.getName());
-      
-      System.out.println(cu.toString());
    }
 }

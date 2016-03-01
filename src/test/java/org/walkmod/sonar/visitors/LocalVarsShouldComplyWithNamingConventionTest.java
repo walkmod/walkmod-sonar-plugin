@@ -33,8 +33,7 @@ public class LocalVarsShouldComplyWithNamingConventionTest extends SemanticTest{
       cu.accept(visitor, null);
       FieldDeclaration fd = (FieldDeclaration)cu.getTypes().get(0).getMembers().get(0);
       
-      String name = fd.getVariables().get(0).getId().getName();
-      System.out.println(cu.toString());
+      String name = fd.getVariables().get(0).getId().getName();    
       
       Assert.assertEquals("max", name);
    }
@@ -59,9 +58,6 @@ public class LocalVarsShouldComplyWithNamingConventionTest extends SemanticTest{
       Assert.assertEquals("name", target.getField());
       
       NameExpr value = (NameExpr) assign.getValue();
-      Assert.assertEquals("name_", value.getName());
-      
-      System.out.println(cu.toString());
-      
+      Assert.assertEquals("name_", value.getName());      
    }
 }

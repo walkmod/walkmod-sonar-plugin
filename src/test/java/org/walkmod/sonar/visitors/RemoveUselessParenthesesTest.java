@@ -11,7 +11,5 @@ public class RemoveUselessParenthesesTest {
       CompilationUnit cu = ASTManager.parse("public class Foo{ public int get() { return (5)*(4-3); } }");
       RemoveUselessParentheses visitor = new RemoveUselessParentheses();
       cu.accept(visitor, null);
-      System.out.println(cu.toString());
-      
    }
 }

@@ -34,8 +34,8 @@
 	<bean id="org.walkmod:walkmod-sonar-plugin:StringCheckOnLeft"
 		class="org.walkmod.sonar.visitors.StringCheckOnLeft"></bean>
 
-	<bean id="org.walkmod:walkmod-sonar-plugin:UseCollectionsIsEmpty"
-		class="org.walkmod.sonar.visitors.UseCollectionsIsEmpty"></bean>
+	<bean id="org.walkmod:walkmod-sonar-plugin:UseCollectionIsEmpty"
+		class="org.walkmod.sonar.visitors.UseCollectionIsEmpty"></bean>
 
 	<bean id="org.walkmod:walkmod-sonar-plugin:UseStringEquals" class="org.walkmod.sonar.visitors.UseStringEquals"></bean>
 

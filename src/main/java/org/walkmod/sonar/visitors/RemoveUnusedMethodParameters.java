@@ -12,6 +12,7 @@ import org.walkmod.javalang.ast.SymbolReference;
 import org.walkmod.javalang.ast.body.MethodDeclaration;
 import org.walkmod.javalang.ast.body.Parameter;
 import org.walkmod.javalang.compiler.symbols.RequiresSemanticAnalysis;
+import org.walkmod.javalang.visitors.VoidVisitor;
 import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.refactor.config.RefactorConfigurationController;
 import org.walkmod.refactor.config.RefactoringUtils;
@@ -21,6 +22,8 @@ import org.walkmod.walkers.VisitorContext;
 public class RemoveUnusedMethodParameters extends VoidVisitorAdapter<VisitorContext> {
 
    private Map<String, String> refactoringRules = null;
+
+   private Map<Method, VoidVisitor<?>> refactoringVisitors = null;
 
    public Map<String, String> getRefactoringRules() {
       return refactoringRules;
@@ -72,12 +75,37 @@ public class RemoveUnusedMethodParameters extends VoidVisitorAdapter<VisitorCont
                         if (refactoringRules == null) {
                            RefactorConfigurationController controller = new RefactorConfigurationController();
                            refactoringRules = controller.getMethodRefactorRules(ctx);
+                           refactoringVisitors = controller.getRefactoringVisitors(ctx);
                         }
 
                         refactoringRules.put(clazzName + ":" + method.getName() + "(" + paramsString + ")",
                               clazzName + ":" + method.getName() + "(" + varsString + ")");
+                        refactoringVisitors.put(method, new ParameterRemover(n.getId().getName()));
                      }
                   }
+               }
+            }
+         }
+      }
+   }
+
+   private class ParameterRemover extends VoidVisitorAdapter<VisitorContext> {
+
+      private String parameter;
+
+      public ParameterRemover(String parameter) {
+         this.parameter = parameter;
+      }
+
+      @Override
+      public void visit(MethodDeclaration md, VisitorContext ctx) {
+         List<Parameter> params = md.getParameters();
+         if (params != null) {
+            Iterator<Parameter> it = params.iterator();
+            while (it.hasNext()) {
+               Parameter param = it.next();
+               if (param.getId().getName().equals(parameter)) {
+                  param.remove();
                }
             }
          }

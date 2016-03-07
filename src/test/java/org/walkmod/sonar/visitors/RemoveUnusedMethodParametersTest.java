@@ -84,8 +84,7 @@ public class RemoveUnusedMethodParametersTest extends SemanticTest {
       WalkModFacade facade = new WalkModFacade(OptionsBuilder.options().executionDirectory(testEnv).printErrors(true));
       TransformationConfig tconfig = new TransformationConfigImpl();
       tconfig.setType("sonar:RemoveUnusedMethodParameters");
-      PluginConfig pc = new PluginConfigImpl("refactor");
-      facade.addPluginConfig(pc, false);
+      
       facade.addTransformationConfig(null, null, false, tconfig, 0, null);
       facade.apply();
 

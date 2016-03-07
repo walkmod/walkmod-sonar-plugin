@@ -191,9 +191,11 @@ public class DeclarationsShouldUseCollectionInterfaces extends VoidVisitorAdapte
          } else {
             refactorizable = false;
          }
+         super.visit(n, ctx);
       }
 
       public void visit(NameExpr n, VisitorContext ctx) {
+         super.visit(n, ctx);
          Node parent = n.getParentNode();
          if (parent instanceof ReturnStmt) {
             Node methodDeclaration = n.getParentNode();

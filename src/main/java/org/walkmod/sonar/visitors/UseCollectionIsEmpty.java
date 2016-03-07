@@ -48,6 +48,7 @@ public class UseCollectionIsEmpty extends VoidVisitorAdapter<VisitorContext> {
 
    @Override
    public void visit(BinaryExpr n, VisitorContext ctx) {
+      super.visit(n, ctx);
       if (isValid(n.getOperator())) {
          Expression left = n.getLeft();
          Expression right = n.getRight();

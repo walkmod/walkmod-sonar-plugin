@@ -23,4 +23,12 @@ public class RemoveUselessImportsTest extends SemanticTest {
       cu.accept(visitor, null);
       Assert.assertFalse(cu.getImports().isEmpty());
    }
+   
+   @Test
+   public void testMixing() throws Exception{
+      CompilationUnit cu = compile("import java.io.File; import java.util.List; public class Foo{ private List list; }");
+      RemoveUselessImports visitor = new RemoveUselessImports();
+      cu.accept(visitor, null);
+      Assert.assertEquals(1, cu.getImports().size());
+   }
 }

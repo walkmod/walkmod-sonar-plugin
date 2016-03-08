@@ -9,17 +9,17 @@ import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
 @RequiresSemanticAnalysis
-public class RemoveUselessImports extends VoidVisitorAdapter<VisitorContext>{
+public class RemoveUselessImports extends VoidVisitorAdapter<VisitorContext> {
 
    @Override
-   public void visit(ImportDeclaration id, VisitorContext ctx){
+   public void visit(ImportDeclaration id, VisitorContext ctx) {
       List<SymbolReference> references = id.getUsages();
-      
-      if(references == null || references.isEmpty()){
-         id.remove();
-      }
-      else{
-         super.visit(id, ctx);
+      if (!id.isNewNode()) {
+         if (references == null || references.isEmpty()) {
+            id.remove();
+         } else {
+            super.visit(id, ctx);
+         }
       }
    }
 }

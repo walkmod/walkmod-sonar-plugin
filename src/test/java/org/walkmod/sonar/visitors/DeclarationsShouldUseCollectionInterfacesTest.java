@@ -1,9 +1,15 @@
 package org.walkmod.sonar.visitors;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.walkmod.javalang.ast.CompilationUnit;
 import org.walkmod.javalang.ast.body.FieldDeclaration;
+import org.walkmod.javalang.ast.body.MethodDeclaration;
+import org.walkmod.javalang.ast.expr.VariableDeclarationExpr;
+import org.walkmod.javalang.ast.stmt.ExpressionStmt;
+import org.walkmod.javalang.ast.stmt.Statement;
 import org.walkmod.javalang.ast.type.ClassOrInterfaceType;
 import org.walkmod.javalang.ast.type.ReferenceType;
 import org.walkmod.javalang.test.SemanticTest;
@@ -65,4 +71,23 @@ public class DeclarationsShouldUseCollectionInterfacesTest extends SemanticTest{
       type = (ClassOrInterfaceType) fd.getType();
       Assert.assertEquals("List", type.getName());
    }
+   
+
+   @Test
+   public void testSimpleCaseWithVars() throws Exception {
+      CompilationUnit cu = compile("import java.util.LinkedList; "+
+     "public class Foo { "+
+         "public void test() { "+
+            "LinkedList list = new LinkedList();"+
+         " }"+
+      " } ");
+      DeclarationsShouldUseCollectionInterfaces visitor = new DeclarationsShouldUseCollectionInterfaces();
+      visitor.visit(cu, null);
+      MethodDeclaration md = (MethodDeclaration) cu.getTypes().get(0).getMembers().get(0);
+      List<Statement> stmts = md.getBody().getStmts();
+      ExpressionStmt eStmt = (ExpressionStmt) stmts.get(0);
+      VariableDeclarationExpr vde = (VariableDeclarationExpr)eStmt.getExpression();
+      Assert.assertEquals("List", vde.getType().toString());
+   }
+   
 }

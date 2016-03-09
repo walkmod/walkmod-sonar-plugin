@@ -23,4 +23,14 @@ public class RemoveUselessParenthesesTest {
       cu.accept(visitor, null);
       System.out.println(cu);
    }
+   
+   @Test
+   public void test3() throws Exception{
+      CompilationUnit cu = ASTManager.parse("public class Foo{ public int get() { String a = \"aaa\",b =  \"bbb\"; "
+              + "if((a!=null) || (b!=null && b.length()>0))"
+              + "return false;} }");
+      RemoveUselessParentheses visitor = new RemoveUselessParentheses();
+      cu.accept(visitor, null);
+      System.out.println(cu);
+   }
 }

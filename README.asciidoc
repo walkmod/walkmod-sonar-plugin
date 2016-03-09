@@ -12,13 +12,17 @@ This is a http://www.walkmod.com[walkmod] plugin to automatically fix sonar rule
 - sonar:ArrayDesignatorOnType
 - sonar:CollapsibleIfStatements
 - sonar:DeclarationsShouldUseCollectionInterfaces
-- sonar:LocalVarsShouldComplyWithNamingConventions
+- sonar:LocalVarsShouldComplyWithNamingConvention
 - sonar:PrimitiveInstantiationForToString
 - sonar:RedundantCastsShouldNotBeUsed
 - sonar:RemoveCodeComment
 - sonar:RemoveEmptyMethod
 - sonar:RemoveEmptyStatement
 - sonar:RemoveLiteralBoolean
+- sonar:RemoveUnusedMethodParameters
+- sonar:RemoveUselessImports
+- sonar:RemoveUselessParentheses
+- sonar:RemoveUselessVariables
 - sonar:StaticInitializedFieldToFinal
 - sonar:StringCheckOnLeft
 - sonar:UseCollectionIsEmpty
@@ -28,9 +32,9 @@ This is a http://www.walkmod.com[walkmod] plugin to automatically fix sonar rule
 
 == Usage
 
-1) Verify that your walkmod version is > = 2.2.0
+1) Verify that your walkmod version is > = 2.3.2 and your project is Maven or Gradle.
 
-2) Execute the following command to add this code transformation plugin as part of your conventions.
+2) Execute the following command to add this code transformation plugin as part of your conventions. 
 
 ----
 walkmod add sonar:CollapsibleIfStatements

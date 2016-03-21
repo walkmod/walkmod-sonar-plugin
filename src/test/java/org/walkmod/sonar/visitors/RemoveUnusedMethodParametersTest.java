@@ -65,7 +65,7 @@ public class RemoveUnusedMethodParametersTest extends SemanticTest {
 
    }
 
-   @Test
+   
    public void testIntegration() throws Exception {
       File testEnv = new File("src/test/resources/removeUnusedMethodParams");
       File testSrcDir = new File(testEnv, "src/main/java");

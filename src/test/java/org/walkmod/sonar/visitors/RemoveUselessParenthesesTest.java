@@ -33,4 +33,12 @@ public class RemoveUselessParenthesesTest {
       cu.accept(visitor, null);
       System.out.println(cu);
    }
+   
+   @Test
+   public void testWithCastExpr() throws Exception{
+      CompilationUnit cu = ASTManager.parse("public class Foo { private Object i; public boolean foo() { if (((Integer)i).intValue() == 0) { return true; }else{ return false;} } } ");
+      RemoveUselessParentheses visitor = new RemoveUselessParentheses();
+      cu.accept(visitor, null);
+      System.out.println(cu);
+   }
 }

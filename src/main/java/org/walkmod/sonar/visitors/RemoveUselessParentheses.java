@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.walkmod.javalang.ast.Node;
 import org.walkmod.javalang.ast.expr.BinaryExpr;
+import org.walkmod.javalang.ast.expr.CastExpr;
 import org.walkmod.javalang.ast.expr.EnclosedExpr;
 import org.walkmod.javalang.ast.expr.Expression;
 import org.walkmod.javalang.visitors.VoidVisitorAdapter;
@@ -14,8 +15,8 @@ public class RemoveUselessParentheses extends VoidVisitorAdapter<VisitorContext>
 
    //https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html
    private Map<BinaryExpr.Operator, Integer> precedence = new HashMap<BinaryExpr.Operator, Integer>();
-   
-   public RemoveUselessParentheses(){
+
+   public RemoveUselessParentheses() {
       precedence.put(BinaryExpr.Operator.and, 10);
       precedence.put(BinaryExpr.Operator.or, 10);
       precedence.put(BinaryExpr.Operator.binAnd, 9);
@@ -41,8 +42,10 @@ public class RemoveUselessParentheses extends VoidVisitorAdapter<VisitorContext>
    public void visit(EnclosedExpr n, VisitorContext ctx) {
       Expression inner = n.getInner();
       if (!(inner instanceof BinaryExpr)) {
-         n.getParentNode().replaceChildNode(n, inner);
-         inner.accept(this, ctx);
+         if (!(inner instanceof CastExpr)) {
+            n.getParentNode().replaceChildNode(n, inner);
+            inner.accept(this, ctx);
+         }
       } else {
          BinaryExpr be = (BinaryExpr) inner;
          if (be.getLeft() instanceof EnclosedExpr) {

@@ -40,7 +40,7 @@ public class LocalVarsShouldComplyWithNamingConvention extends VoidVisitorAdapte
          return false;
       }
       char initial = name.charAt(0);
-      if (Character.isAlphabetic(initial) && Character.isLowerCase(initial)) {
+      if (Character.isLetter(initial) && Character.isLowerCase(initial)) {
          if (name.contains("_") || name.contains("\\$")) {
             return false;
          } else {

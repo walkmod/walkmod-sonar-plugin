@@ -8,6 +8,7 @@ import org.walkmod.javalang.ast.expr.BinaryExpr;
 import org.walkmod.javalang.ast.expr.CastExpr;
 import org.walkmod.javalang.ast.expr.EnclosedExpr;
 import org.walkmod.javalang.ast.expr.Expression;
+import org.walkmod.javalang.ast.expr.UnaryExpr;
 import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
@@ -48,25 +49,29 @@ public class RemoveUselessParentheses extends VoidVisitorAdapter<VisitorContext>
          }
       } else {
          BinaryExpr be = (BinaryExpr) inner;
-         if (be.getLeft() instanceof EnclosedExpr) {
-            n.getParentNode().replaceChildNode(n, inner);
-            inner.accept(this, ctx);
-         } else if (be.getRight() instanceof EnclosedExpr) {
-            n.getParentNode().replaceChildNode(n, inner);
-            inner.accept(this, ctx);
-         } else {
-            Node parent = n.getParentNode();
-            if (parent instanceof BinaryExpr) {
-               BinaryExpr parentBinary = (BinaryExpr) parent;
-               if (precedence.get(parentBinary.getOperator()) > precedence.get(be.getOperator())) {
-                  n.getParentNode().replaceChildNode(n, inner);
-                  inner.accept(this, ctx);
+         if (!(n.getParentNode() instanceof UnaryExpr)) {
+            if (be.getLeft() instanceof EnclosedExpr) {
+               n.getParentNode().replaceChildNode(n, inner);
+               inner.accept(this, ctx);
+            } else if (be.getRight() instanceof EnclosedExpr) {
+               n.getParentNode().replaceChildNode(n, inner);
+               inner.accept(this, ctx);
+            } else {
+               Node parent = n.getParentNode();
+               if (parent instanceof BinaryExpr) {
+                  BinaryExpr parentBinary = (BinaryExpr) parent;
+                  if (precedence.get(parentBinary.getOperator()) > precedence.get(be.getOperator())) {
+                     n.getParentNode().replaceChildNode(n, inner);
+                     inner.accept(this, ctx);
+                  } else {
+                     super.visit(n, ctx);
+                  }
                } else {
                   super.visit(n, ctx);
                }
-            } else {
-               super.visit(n, ctx);
             }
+         } else {
+            inner.accept(this, ctx);
          }
       }
    }

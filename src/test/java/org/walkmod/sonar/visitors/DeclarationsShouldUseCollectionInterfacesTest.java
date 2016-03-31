@@ -90,4 +90,25 @@ public class DeclarationsShouldUseCollectionInterfacesTest extends SemanticTest{
       Assert.assertEquals("List", vde.getType().toString());
    }
    
+   
+   @Test
+   public void testTypeArgs() throws Exception {
+      CompilationUnit cu = compile(
+     "import java.util.ArrayList; public class Foo { ArrayList<String> inTitles; "+
+        
+         "public void test() { "+
+            "ArrayList<String> titles = (ArrayList<String>) inTitles.clone();"+
+         " }"+
+      " } ");
+      DeclarationsShouldUseCollectionInterfaces visitor = new DeclarationsShouldUseCollectionInterfaces();
+      visitor.visit(cu, null);
+      
+      MethodDeclaration md = (MethodDeclaration) cu.getTypes().get(0).getMembers().get(1);
+      ExpressionStmt stmt = (ExpressionStmt) md.getBody().getStmts().get(0);
+      VariableDeclarationExpr expr = (VariableDeclarationExpr) stmt.getExpression();
+      ClassOrInterfaceType type = (ClassOrInterfaceType)expr.getType();
+      
+      Assert.assertEquals(1, type.getTypeArgs().size());
+   }
+   
 }

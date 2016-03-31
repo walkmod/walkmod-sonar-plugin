@@ -39,6 +39,7 @@ import org.walkmod.javalang.ast.expr.NameExpr;
 import org.walkmod.javalang.ast.expr.VariableDeclarationExpr;
 import org.walkmod.javalang.ast.stmt.ReturnStmt;
 import org.walkmod.javalang.ast.type.ClassOrInterfaceType;
+import org.walkmod.javalang.ast.type.ReferenceType;
 import org.walkmod.javalang.ast.type.Type;
 import org.walkmod.javalang.compiler.symbols.RequiresSemanticAnalysis;
 import org.walkmod.javalang.compiler.symbols.SymbolType;
@@ -102,6 +103,9 @@ public class DeclarationsShouldUseCollectionInterfaces extends VoidVisitorAdapte
             if (clazz != null) {
                if (clazz.isAssignableFrom(sd.getClazz()) && !sd.getClazz().isAssignableFrom(clazz)) {
                   ClassOrInterfaceType aux = new ClassOrInterfaceType(clazz.getSimpleName());
+                  GetTypeArgs resolver = new GetTypeArgs();
+                  type.accept(resolver, ctx);
+                  aux.setTypeArgs(resolver.typeArgs());
                   aux.setSymbolData(new SymbolType(clazz));
                   n.replaceChildNode(type, aux);
                   pendingTypes.add(clazz.getName());
@@ -168,6 +172,20 @@ public class DeclarationsShouldUseCollectionInterfaces extends VoidVisitorAdapte
          }
       }
 
+   }
+   
+   private class GetTypeArgs extends VoidVisitorAdapter<VisitorContext>{
+      
+      private List<Type> typeArgs = null;
+      
+      @Override
+      public void visit(ClassOrInterfaceType type, VisitorContext ctx){
+         typeArgs = type.getTypeArgs();
+      }
+      
+      public List<Type> typeArgs(){
+         return typeArgs;
+      }
    }
 
    private class GetGenericCollectionClass extends VoidVisitorAdapter<VisitorContext> {

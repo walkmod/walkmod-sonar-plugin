@@ -271,9 +271,9 @@ public class AddCurlyBrackets extends VoidVisitorAdapter<VisitorContext> {
          List<Statement> statements = n.getStmts();
          if (statements != null) {
             if (statements.size() > 0 && !isBlockStmt(statements.get(0))) {
-               statements = new LinkedList<Statement>();
-               statements.add(createBlockStmt(statements));
-               n.setStmts(statements);
+               List<Statement> newStatements = new LinkedList<Statement>();
+               newStatements.add(createBlockStmt(statements));
+               n.setStmts(newStatements);
             }
          }
       }

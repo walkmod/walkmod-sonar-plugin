@@ -43,234 +43,240 @@ import org.walkmod.walkers.VisitorContext;
  */
 public class AddCurlyBrackets extends VoidVisitorAdapter<VisitorContext> {
 
-	/** The disable list. */
-	private final List<String> disableList;
+   /** The disable list. */
+   private final List<String> disableList;
 
-	/**
-	 * The Enum Block.
-	 */
-	private enum Block {
+   /**
+    * The Enum Block.
+    */
+   private enum Block {
 
-		/** The if. */
-		IF("IF"),
+      /** The if. */
+      IF("IF"),
 
-		/** The else. */
-		ELSE("ELSE"),
+      /** The else. */
+      ELSE("ELSE"),
 
-		/** The for. */
-		FOR("FOR"),
+      /** The for. */
+      FOR("FOR"),
 
-		/** The do. */
-		DO("DO"),
+      /** The do. */
+      DO("DO"),
 
-		/** The while. */
-		WHILE("WHILE"),
+      /** The while. */
+      WHILE("WHILE"),
 
-		/** The switch. */
-		SWITCH("SWITCH"),
+      /** The switch. */
+      SWITCH("SWITCH"),
 
-		/** The foreach. */
-		FOREACH("FOREACH");
+      /** The foreach. */
+      FOREACH("FOREACH");
 
-		/** The name. */
-		String name;
+      /** The name. */
+      String name;
 
-		/**
-		 * Instantiates a new block.
-		 *
-		 * @param name
-		 *            the name
-		 */
-		private Block(String name) {
-			this.name = name;
-		}
-	}
+      /**
+       * Instantiates a new block.
+       *
+       * @param name
+       *           the name
+       */
+      private Block(String name) {
+         this.name = name;
+      }
+   }
 
-	/**
-	 * Instantiates a new adds the curly brackets.
-	 */
-	public AddCurlyBrackets() {
-		disableList = new ArrayList<String>();
-	}
+   /**
+    * Instantiates a new adds the curly brackets.
+    */
+   public AddCurlyBrackets() {
+      disableList = new ArrayList<String>();
+   }
 
-	/**
-	 * Sets the disable for.
-	 *
-	 * @param disableFor
-	 *            the new disable for
-	 */
-	public void setDisableFor(String disableFor) {
-		if (disableFor != null) {
-			StringTokenizer tokenizer = new StringTokenizer(disableFor, ",");
-			while (tokenizer.hasMoreTokens()) {
-				String string = tokenizer.nextToken().trim();
-				disableList.add(string.toUpperCase());
-			}
-		}
-	}
+   /**
+    * Sets the disable for.
+    *
+    * @param disableFor
+    *           the new disable for
+    */
+   public void setDisableFor(String disableFor) {
+      if (disableFor != null) {
+         StringTokenizer tokenizer = new StringTokenizer(disableFor, ",");
+         while (tokenizer.hasMoreTokens()) {
+            String string = tokenizer.nextToken().trim();
+            disableList.add(string.toUpperCase());
+         }
+      }
+   }
 
-	/**
-	 * Checks if is enabled.
-	 *
-	 * @param block
-	 *            the block
-	 * @return true, if is enabled
-	 */
-	private boolean isEnabled(Block block) {
-		return !disableList.contains(block.name);
-	}
+   /**
+    * Checks if is enabled.
+    *
+    * @param block
+    *           the block
+    * @return true, if is enabled
+    */
+   private boolean isEnabled(Block block) {
+      return !disableList.contains(block.name);
+   }
 
-	/**
-	 * Checks if is block stmt.
-	 *
-	 * @param thenStmt
-	 *            the then stmt
-	 * @return true, if is block stmt
-	 */
-	private boolean isBlockStmt(Statement thenStmt) {
-		if (thenStmt instanceof BlockStmt) {
-			return true;
-		}
-		return false;
-	}
+   /**
+    * Checks if is block stmt.
+    *
+    * @param thenStmt
+    *           the then stmt
+    * @return true, if is block stmt
+    */
+   private boolean isBlockStmt(Statement thenStmt) {
+      if (thenStmt instanceof BlockStmt) {
+         return true;
+      }
+      return false;
+   }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.IfStmt,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(IfStmt n, VisitorContext arg) {
-		if (isEnabled(Block.IF)) {
-			Statement thenStmt = n.getThenStmt();
-			if (!isBlockStmt(thenStmt)) {
-				List<Statement> statements = new ArrayList<Statement>();
-				statements.add(thenStmt);
-				BlockStmt stmt = new BlockStmt();
-				stmt.setStmts(statements);
-				n.setThenStmt(stmt);
-			}
-		}
-		if (isEnabled(Block.ELSE)) {
-			Statement elseStmt = n.getElseStmt();
-			if (elseStmt != null && !(elseStmt instanceof IfStmt)) {
-				if (!isBlockStmt(elseStmt)) {
-					List<Statement> statements = new ArrayList<Statement>();
-					statements.add(elseStmt);
-					BlockStmt stmt = new BlockStmt();
-					stmt.setStmts(statements);
-					n.setElseStmt(stmt);
-				}
-			}
-		}
-		super.visit(n, arg);
-	}
+   private BlockStmt createBlockStmt(Statement stmt) {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.ForStmt,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(ForStmt n, VisitorContext arg) {
-		if (isEnabled(Block.FOR)) {
-			Statement bodyStmt = n.getBody();
-			if (!isBlockStmt(bodyStmt)) {
-				List<Statement> statements = new ArrayList<Statement>();
-				statements.add(bodyStmt);
-				BlockStmt stmt = new BlockStmt();
-				stmt.setStmts(statements);
-				n.setBody(stmt);
-			}
-		}
-		super.visit(n, arg);
-	}
+      List<Statement> statements = new ArrayList<Statement>();
+      BlockStmt block = new BlockStmt();
+      try {
+         statements.add(stmt.clone());
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.WhileStmt,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(WhileStmt n, VisitorContext arg) {
-		if (isEnabled(Block.WHILE)) {
-			Statement bodyStmt = n.getBody();
-			if (!isBlockStmt(bodyStmt)) {
-				List<Statement> statements = new ArrayList<Statement>();
-				statements.add(bodyStmt);
-				BlockStmt stmt = new BlockStmt();
-				stmt.setStmts(statements);
-				n.setBody(stmt);
-			}
-		}
-		super.visit(n, arg);
-	}
+         block.setStmts(statements);
+      } catch (CloneNotSupportedException e) {
+      }
+      return block;
+   }
+   
+   private BlockStmt createBlockStmt(List<Statement> stmts) {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.DoStmt,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(DoStmt n, VisitorContext arg) {
-		if (isEnabled(Block.DO)) {
-			Statement bodyStmt = n.getBody();
-			if (!isBlockStmt(bodyStmt)) {
-				List<Statement> statements = new ArrayList<Statement>();
-				statements.add(bodyStmt);
-				BlockStmt stmt = new BlockStmt();
-				stmt.setStmts(statements);
-				n.setBody(stmt);
-			}
-		}
-		super.visit(n, arg);
-	}
+      List<Statement> statements = new ArrayList<Statement>();
+      BlockStmt block = new BlockStmt();
+      try {
+         for(Statement stmt: stmts){
+            statements.add(stmt.clone());
+         }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.ForeachStmt,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(ForeachStmt n, VisitorContext arg) {
-		if (isEnabled(Block.FOREACH)) {
-			Statement bodyStmt = n.getBody();
-			if (!isBlockStmt(bodyStmt)) {
-				List<Statement> statements = new ArrayList<Statement>();
-				statements.add(bodyStmt);
-				BlockStmt stmt = new BlockStmt();
-				stmt.setStmts(statements);
-				n.setBody(stmt);
-			}
-		}
-		super.visit(n, arg);
-	}
+         block.setStmts(statements);
+      } catch (CloneNotSupportedException e) {
+      }
+      return block;
+   }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.SwitchEntryStmt,
-	 * java.lang.Object)
-	 */
-	@Override
-	public void visit(SwitchEntryStmt n, VisitorContext arg) {
-		if (isEnabled(Block.SWITCH)) {
-			List<Statement> statements = n.getStmts();
-			if (statements != null) {
-				if (statements.size() > 0 && !isBlockStmt(statements.get(0))) {
-					BlockStmt stmt = new BlockStmt();
-					stmt.setStmts(statements);
-					statements = new LinkedList<Statement>();
-					statements.add(stmt);
-					n.setStmts(statements);
-				}
-			}
-		}
-		super.visit(n, arg);
-	}
+   /*
+    * (non-Javadoc)
+    * 
+    * @see
+    * org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.IfStmt,
+    * java.lang.Object)
+    */
+   @Override
+   public void visit(IfStmt n, VisitorContext arg) {
+      if (isEnabled(Block.IF)) {
+         Statement thenStmt = n.getThenStmt();
+         if (!isBlockStmt(thenStmt)) {
+            n.setThenStmt(createBlockStmt(thenStmt));
+         }
+
+      }
+      if (isEnabled(Block.ELSE)) {
+         Statement elseStmt = n.getElseStmt();
+         if (elseStmt != null && !(elseStmt instanceof IfStmt)) {
+            if (!isBlockStmt(elseStmt)) {
+               n.setElseStmt(createBlockStmt(elseStmt));
+            }
+         }
+      }
+      super.visit(n, arg);
+   }
+
+   /*
+    * (non-Javadoc)
+    * 
+    * @see
+    * org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.ForStmt,
+    * java.lang.Object)
+    */
+   @Override
+   public void visit(ForStmt n, VisitorContext arg) {
+      if (isEnabled(Block.FOR)) {
+         Statement bodyStmt = n.getBody();
+         if (!isBlockStmt(bodyStmt)) {
+            n.setBody(createBlockStmt(bodyStmt));
+         }
+      }
+      super.visit(n, arg);
+   }
+
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.
+    * WhileStmt, java.lang.Object)
+    */
+   @Override
+   public void visit(WhileStmt n, VisitorContext arg) {
+      if (isEnabled(Block.WHILE)) {
+         Statement bodyStmt = n.getBody();
+         if (!isBlockStmt(bodyStmt)) {           
+            n.setBody(createBlockStmt(bodyStmt));
+         }
+      }
+      super.visit(n, arg);
+   }
+
+   /*
+    * (non-Javadoc)
+    * 
+    * @see
+    * org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.DoStmt,
+    * java.lang.Object)
+    */
+   @Override
+   public void visit(DoStmt n, VisitorContext arg) {
+      if (isEnabled(Block.DO)) {
+         Statement bodyStmt = n.getBody();
+         if (!isBlockStmt(bodyStmt)) {            
+            n.setBody(createBlockStmt(bodyStmt));
+         }
+      }
+      super.visit(n, arg);
+   }
+
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.
+    * ForeachStmt, java.lang.Object)
+    */
+   @Override
+   public void visit(ForeachStmt n, VisitorContext arg) {
+      if (isEnabled(Block.FOREACH)) {
+         Statement bodyStmt = n.getBody();
+         if (!isBlockStmt(bodyStmt)) {           
+            n.setBody(createBlockStmt(bodyStmt));
+         }
+      }
+      super.visit(n, arg);
+   }
+
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.walkmod.javalang.visitors.VoidVisitorAdapter#visit(org.walkmod.javalang.ast.stmt.
+    * SwitchEntryStmt, java.lang.Object)
+    */
+   @Override
+   public void visit(SwitchEntryStmt n, VisitorContext arg) {
+      if (isEnabled(Block.SWITCH)) {
+         List<Statement> statements = n.getStmts();
+         if (statements != null) {
+            if (statements.size() > 0 && !isBlockStmt(statements.get(0))) {
+               statements = new LinkedList<Statement>();
+               statements.add(createBlockStmt(statements));
+               n.setStmts(statements);
+            }
+         }
+      }
+      super.visit(n, arg);
+   }
 }

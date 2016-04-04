@@ -25,4 +25,23 @@ public class CollapsibleIfStatementsTest {
       Assert.assertNull(stmt.getStmts());
       Assert.assertTrue(ifStmt.getCondition() instanceof BinaryExpr);
    }
+   
+   @Test
+   public void test2() throws Exception{
+      String code =
+            "public class Foo{ public void bar(){"+
+            "while (!find) {"+
+                  "goToTeaserFrame();"+
+                  "find = browser.elementVisible(By.xpath(xPathTeaserTextField));"+
+                  "if (!find) {"+
+                     "if (++retry >= browser.getCustomRetries()) {"+
+                        "throw new QAException(\"Unable to access to the text teaser\");"+
+                     "}"+
+                   "}"+
+            "}}}";
+      CompilationUnit cu = ASTManager.parse(code);
+      CollapsibleIfStatements visitor = new CollapsibleIfStatements();
+      visitor.visit(cu, null);
+      System.out.println(cu.toString());
+   }
 }

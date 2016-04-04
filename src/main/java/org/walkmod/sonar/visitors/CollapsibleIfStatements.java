@@ -45,21 +45,21 @@ public class CollapsibleIfStatements extends  VoidVisitorAdapter<VisitorContext>
 
                Statement thisElseStmt = n.getElseStmt();
                if (thisElseStmt == null) {
-
+                  try{
                   Expression rightExpression = parentIf.getCondition();
                   if (rightExpression instanceof BinaryExpr) {
-                     rightExpression = new EnclosedExpr(parentIf.getCondition());
+                     rightExpression = new EnclosedExpr(parentIf.getCondition().clone());
                   }
 
                   Expression leftExpression = n.getCondition();
                   if (leftExpression instanceof BinaryExpr) {
-                     leftExpression = new EnclosedExpr(n.getCondition());
+                     leftExpression = new EnclosedExpr(n.getCondition().clone());
                   }
 
                   BinaryExpr condition = new BinaryExpr(rightExpression, leftExpression, BinaryExpr.Operator.and);
 
                   if (parentIf.getThenStmt() == n) {
-                     parentIf.setThenStmt(n.getThenStmt());
+                     parentIf.setThenStmt(n.getThenStmt().clone());
                      parentIf.setCondition(condition);
                   } else {
                      Statement stmt = parentIf.getThenStmt();
@@ -67,12 +67,14 @@ public class CollapsibleIfStatements extends  VoidVisitorAdapter<VisitorContext>
                         BlockStmt block = (BlockStmt) stmt;
                         List<Statement> stmts = block.getStmts();
                         if (stmts.size() == 1) {
-                           parentIf.setThenStmt(n.getThenStmt());
+                           parentIf.setThenStmt(n.getThenStmt().clone());
                            parentIf.setCondition(condition);
                         }
                      }
                   }
-
+                  }catch(CloneNotSupportedException e){
+                     throw new RuntimeException(e);
+                  }
                }
             }
          }

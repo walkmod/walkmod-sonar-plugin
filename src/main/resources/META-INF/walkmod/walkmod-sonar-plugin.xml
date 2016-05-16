@@ -66,5 +66,8 @@
         
     <bean id="org.walkmod:walkmod-sonar-plugin:LocalVarsShouldComplyWithNamingConvention"
         class="org.walkmod.sonar.visitors.LocalVarsShouldComplyWithNamingConvention"></bean>
+        
+    <bean id="org.walkmod:walkmod-sonar-plugin:EitherLogOrRethrowThisException"
+        class="org.walkmod.sonar.visitors.EitherLogOrRethrowThisException"></bean>
 
 </beans>

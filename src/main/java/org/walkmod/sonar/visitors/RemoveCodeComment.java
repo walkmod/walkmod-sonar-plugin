@@ -20,15 +20,14 @@
 
 package org.walkmod.sonar.visitors;
 
-import java.beans.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.walkmod.javalang.ASTManager;
-import org.walkmod.javalang.ParseException;
 import org.walkmod.javalang.ast.Comment;
 import org.walkmod.javalang.ast.CompilationUnit;
 import org.walkmod.javalang.ast.LineComment;
+import org.walkmod.javalang.ast.stmt.Statement;
 import org.walkmod.javalang.visitors.VoidVisitorAdapter;
 import org.walkmod.walkers.VisitorContext;
 
@@ -88,13 +87,16 @@ public class RemoveCodeComment extends VoidVisitorAdapter<VisitorContext> {
 
    private boolean requiresToDelete(String code) {
       try {
+         if(code.trim().endsWith("{")){
+            return true;
+         }
          if (!code.startsWith("{")) {
             code = "{" + code + "}";
          }
          ASTManager.parse(Statement.class, code);
 
          return true;
-      } catch (ParseException e) {
+      } catch (Throwable e) {
       }
       return false;
    }

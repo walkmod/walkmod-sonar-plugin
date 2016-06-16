@@ -88,10 +88,10 @@ public class IgnoreJsonPropertyNonReadFields extends VoidVisitorAdapter<VisitorC
                      boolean exists = false;
                      while (it2.hasNext() && !exists) {
                         AnnotationExpr currentAnn = it2.next();
-                        exists = currentAnn.getName().getName().equals("SupressWarnings");
+                        exists = currentAnn.getName().getName().equals("SuppressWarnings");
                      }
                      if (!exists) {
-                        ann2.add(new SingleMemberAnnotationExpr(new NameExpr("SupressWarnings"),
+                        ann2.add(new SingleMemberAnnotationExpr(new NameExpr("SuppressWarnings"),
                               new StringLiteralExpr("findbugs:URF_UNREAD_FIELD")));
                      }
                   }

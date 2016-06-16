@@ -60,14 +60,41 @@
 
 	<bean id="org.walkmod:walkmod-sonar-plugin:RemoveUnusedMethodParameters"
 		class="org.walkmod.sonar.visitors.RemoveUnusedMethodParameters"></bean>
-	
+
 	<bean id="org.walkmod:walkmod-sonar-plugin:RemoveUselessVariables"
-        class="org.walkmod.sonar.visitors.RemoveUselessVariables"></bean>
-        
-    <bean id="org.walkmod:walkmod-sonar-plugin:LocalVarsShouldComplyWithNamingConvention"
-        class="org.walkmod.sonar.visitors.LocalVarsShouldComplyWithNamingConvention"></bean>
-        
-    <bean id="org.walkmod:walkmod-sonar-plugin:EitherLogOrRethrowThisException"
-        class="org.walkmod.sonar.visitors.EitherLogOrRethrowThisException"></bean>
+		class="org.walkmod.sonar.visitors.RemoveUselessVariables"></bean>
+
+	<bean
+		id="org.walkmod:walkmod-sonar-plugin:LocalVarsShouldComplyWithNamingConvention"
+		class="org.walkmod.sonar.visitors.LocalVarsShouldComplyWithNamingConvention"></bean>
+
+	<bean
+		id="org.walkmod:walkmod-sonar-plugin:EitherLogOrRethrowThisException"
+		class="org.walkmod.sonar.visitors.EitherLogOrRethrowThisException"></bean>
+
+	<bean
+		id="org.walkmod:walkmod-sonar-plugin:AvoidConcatenatingInStringBuffer"
+		class="org.walkmod.sonar.visitors.AvoidConcatenatingInStringBuffer"></bean>
+
+	<bean id="org.walkmod:walkmod-sonar-plugin:RemoveUnusedModifier"
+		class="org.walkmod.sonar.visitors.RemoveUnusedModifier"></bean>
+
+	<bean id="org.walkmod:walkmod-sonar-plugin:SingularField" class="org.walkmod.sonar.visitors.SingularField"></bean>
+
+	<bean id="org.walkmod:walkmod-sonar-plugin:AddFunctionalInterface"
+		class="org.walkmod.sonar.visitors.AddFunctionalInterface"></bean>
+
+	<bean id="org.walkmod:walkmod-sonar-plugin:UseUtilityClass" class="org.walkmod.sonar.visitors.UseUtilityClass"></bean>
+
+	<bean
+		id="org.walkmod:walkmod-sonar-plugin:FieldsOfInmutableClassesAreFinal"
+		class="org.walkmod.sonar.visitors.FieldsOfInmutableClassesAreFinal"></bean>
+
+	<bean
+		id="org.walkmod:walkmod-sonar-plugin:PrivateMethodsThatShouldBeStatic"
+		class="org.walkmod.sonar.visitors.PrivateMethodsThatShouldBeStatic"></bean>
+
+	<bean id="org.walkmod:walkmod-sonar-plugin:IgnoreJsonPropertyNonReadFields"
+		class="org.walkmod.sonar.visitors.IgnoreJsonPropertyNonReadFields"></bean>
 
 </beans>

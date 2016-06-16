@@ -22,6 +22,8 @@ import org.walkmod.walkers.VisitorContext;
 public class AvoidDuplicateLiterals extends VoidVisitorAdapter<VisitorContext> {
 
    private Map<String, List<StringLiteralExpr>> literals = new HashMap<String, List<StringLiteralExpr>>();
+   
+   private int counter = 1;
 
    @Override
    public void visit(StringLiteralExpr n, VisitorContext ctx) {
@@ -39,6 +41,7 @@ public class AvoidDuplicateLiterals extends VoidVisitorAdapter<VisitorContext> {
    public void visit(ClassOrInterfaceDeclaration n, VisitorContext ctx) {
       Map<String, List<StringLiteralExpr>> oldLiterals = literals;
       literals = new HashMap<String, List<StringLiteralExpr>>();
+      counter = 1;
       super.visit(n, ctx);
 
       Set<String> keys = literals.keySet();
@@ -47,13 +50,14 @@ public class AvoidDuplicateLiterals extends VoidVisitorAdapter<VisitorContext> {
          Map<String, SymbolDefinition> vars = n.getVariableDefinitions();
          for (String key : keys) {
             List<StringLiteralExpr> instances = literals.get(key);
-            String varName = key.toUpperCase() + "_CONSTANT";
+            String varName = "LITERAL_"+counter;
             if (instances.size() > 1 && !vars.containsKey(varName)) {
 
                FieldDeclaration fd = new FieldDeclaration(ModifierSet.PRIVATE, new ClassOrInterfaceType("String"),
                      new VariableDeclarator(new VariableDeclaratorId(varName)));
                n.getMembers().add(fd);
             }
+            counter ++;
          }
       }
       literals = oldLiterals;

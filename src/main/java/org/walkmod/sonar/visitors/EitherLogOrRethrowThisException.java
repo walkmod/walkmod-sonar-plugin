@@ -41,14 +41,12 @@ public class EitherLogOrRethrowThisException extends VoidVisitorAdapter<VisitorC
    private boolean isLoogingClass(String clazz) {
       return isCommonsLogging(clazz) || isSlf4j(clazz);
    }
-   
- 
-   
-   private boolean isCommonsLogging(String clazz){
+
+   private boolean isCommonsLogging(String clazz) {
       return "org.apache.commons.logging.Log".equals(clazz);
    }
-   
-   private boolean isSlf4j(MethodCallExpr n){
+
+   private boolean isSlf4j(MethodCallExpr n) {
       MethodSymbolData msd = n.getSymbolData();
       if (msd != null) {
          Method md = msd.getMethod();
@@ -57,8 +55,8 @@ public class EitherLogOrRethrowThisException extends VoidVisitorAdapter<VisitorC
       }
       return false;
    }
-   
-   private boolean isSlf4j(String clazz){
+
+   private boolean isSlf4j(String clazz) {
       return "org.slf4j.Logger".equals(clazz);
    }
 
@@ -154,7 +152,6 @@ public class EitherLogOrRethrowThisException extends VoidVisitorAdapter<VisitorC
 
       private VariableDeclaratorId exceptionVar;
 
-
       public LogCorrector(VariableDeclaratorId exceptionVar) {
          this.exceptionVar = exceptionVar;
       }
@@ -166,11 +163,11 @@ public class EitherLogOrRethrowThisException extends VoidVisitorAdapter<VisitorC
          if (isLogInfo(n, String.class)) {
             if (isLogInfo(n, String.class)) {
                List<Expression> newArgs = new LinkedList<Expression>();
-               if(isSlf4j(n)){
-                  newArgs.add(n.getArgs().get(0));
-               }
+
+               newArgs.add(n.getArgs().get(0));
+
                newArgs.add(new NameExpr(exceptionVar.getName()));
-               
+
                MethodCallExpr mce = new MethodCallExpr(n.getScope(), "info", newArgs);
                n.getParentNode().replaceChildNode(n, mce);
             }
@@ -187,9 +184,7 @@ public class EitherLogOrRethrowThisException extends VoidVisitorAdapter<VisitorC
             n.getParentNode().replaceChildNode(n, oce);
          }
       }
-     
 
-      
    }
 
    @Override
@@ -217,7 +212,7 @@ public class EitherLogOrRethrowThisException extends VoidVisitorAdapter<VisitorC
             }
          }
       }
-     
+
    }
-  
+
 }

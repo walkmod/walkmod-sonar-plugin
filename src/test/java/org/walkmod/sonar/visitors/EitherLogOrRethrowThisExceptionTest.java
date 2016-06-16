@@ -37,7 +37,7 @@ public class EitherLogOrRethrowThisExceptionTest extends SemanticTest{
       if(stmts != null){
          TryStmt tryStmt = (TryStmt) stmts.get(0);
          CatchClause clause = tryStmt.getCatchs().get(0);
-         Assert.assertEquals("LOG.info(e);", clause.getCatchBlock().getStmts().get(0).toString());
+         Assert.assertEquals("LOG.info(\"error\", e);", clause.getCatchBlock().getStmts().get(0).toString());
       }
    }
    

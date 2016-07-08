@@ -13,7 +13,11 @@ public class RedundantCastsShouldNotBeUsedTest extends SemanticTest{
    @Test
    public void testSimpleType() throws Exception{
       
-      CompilationUnit cu = compile("public class Foo{ public Integer bar(Integer x) { return (Integer) x; } }");
+      CompilationUnit cu = compile("public class Foo{ "+
+            "public Integer bar(Integer x) {"+
+            " return (Integer) x; "+
+            "} "+
+      "}");
       RedundantCastsShouldNotBeUsed visitor = new RedundantCastsShouldNotBeUsed();
       cu.accept(visitor, null);
       
@@ -26,7 +30,12 @@ public class RedundantCastsShouldNotBeUsedTest extends SemanticTest{
    @Test
    public void testParameterizedType() throws Exception{
       
-      CompilationUnit cu = compile("import java.util.List; public class Foo{ public List<Integer> bar(List<Integer> x) { return (List<Integer>) x; } }");
+      CompilationUnit cu = compile("import java.util.List; "+
+      "public class Foo{ "+
+            "public List<Integer> bar(List<Integer> x) { "+
+               "return (List<Integer>) x; "+
+            "}"+
+      " }");
       RedundantCastsShouldNotBeUsed visitor = new RedundantCastsShouldNotBeUsed();
       cu.accept(visitor, null);
       

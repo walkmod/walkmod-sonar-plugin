@@ -5,6 +5,9 @@
 <beans>
 	<bean id="org.walkmod:walkmod-sonar-plugin:AddCurlyBrackets"
 		class="org.walkmod.sonar.visitors.AddCurlyBrackets"></bean>
+		
+    <bean id="org.walkmod:walkmod-sonar-plugin:Sonar"
+        class="org.walkmod.sonar.visitors.SonarVisitor"></bean>
 
 	<bean id="org.walkmod:walkmod-sonar-plugin:AddSwitchDefaultCase"
 		class="org.walkmod.sonar.visitors.AddSwitchDefaultCase"></bean>

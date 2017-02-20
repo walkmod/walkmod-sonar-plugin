@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.walkmod</groupId>
 	<artifactId>walkmod-sonar-plugin</artifactId>
-	<version>1.1.10</version>
+	<version>1.2.0</version>
 	<url>https://github.com/walkmod/walkmod-sonar-plugin</url>
 	<licenses>
 		<license>
@@ -55,20 +55,20 @@
 	</build>
 	<dependencies>
 		<dependency>
-            <groupId>org.walkmod</groupId>
-            <artifactId>javalang-compiler</artifactId>
-            <version>[2.2, 3.0)</version>
-        </dependency>
+			<groupId>org.walkmod</groupId>
+			<artifactId>javalang-compiler</artifactId>
+			<version>[2.2, 3.0)</version>
+		</dependency>
 		<dependency>
 			<groupId>org.walkmod</groupId>
 			<artifactId>walkmod-core</artifactId>
-			<version>[2.0.0,3.0.0)</version>
-		</dependency>		
+			<version>[2.0.0,4.0.0)</version>
+		</dependency>
 		<dependency>
-            <groupId>org.walkmod</groupId>
-            <artifactId>walkmod-refactor-plugin</artifactId>
-            <version>[2.3.3,3.0.0)</version>
-        </dependency>
+			<groupId>org.walkmod</groupId>
+			<artifactId>walkmod-refactor-plugin</artifactId>
+			<version>[2.3.3,3.0.0)</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -76,11 +76,16 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-            <groupId>org.walkmod</groupId>
-            <artifactId>walkmod-cfg</artifactId>
-            <version>1.4.1</version>
-            <scope>test</scope>
-        </dependency>
+			<groupId>org.walkmod</groupId>
+			<artifactId>walkmod-cfg</artifactId>
+			<version>2.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.mashape.unirest</groupId>
+			<artifactId>unirest-java</artifactId>
+			<version>1.4.9</version>
+		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>

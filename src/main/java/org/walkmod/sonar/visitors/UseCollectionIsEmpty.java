@@ -75,7 +75,7 @@ public class UseCollectionIsEmpty extends VoidVisitorAdapter<VisitorContext> {
 
                   if (Collection.class.isAssignableFrom(msd.getMethod().getDeclaringClass())) {
                      Expression newExpr = new MethodCallExpr(mce.getScope(), "isEmpty");
-                     if (n.getOperator().equals(BinaryExpr.Operator.notEquals)) {
+                     if (n.getOperator().equals(BinaryExpr.Operator.notEquals) || n.getOperator().equals(BinaryExpr.Operator.greater)) {
                         newExpr = new UnaryExpr(newExpr, UnaryExpr.Operator.not);
                      }
 

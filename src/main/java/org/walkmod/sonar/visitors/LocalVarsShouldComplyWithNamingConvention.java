@@ -29,7 +29,7 @@ import org.walkmod.walkers.VisitorContext;
 @RequiresSemanticAnalysis
 public class LocalVarsShouldComplyWithNamingConvention extends VoidVisitorAdapter<VisitorContext> {
 
-   private boolean refactorParameters = true;
+   private boolean refactorParameters = false;
 
    private boolean refactorVariables = true;
 

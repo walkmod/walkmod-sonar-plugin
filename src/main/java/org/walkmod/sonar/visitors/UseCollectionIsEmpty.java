@@ -17,9 +17,12 @@
 package org.walkmod.sonar.visitors;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.walkmod.javalang.ast.MethodSymbolData;
 import org.walkmod.javalang.ast.expr.BinaryExpr;
+import org.walkmod.javalang.ast.expr.BinaryExpr.Operator;
 import org.walkmod.javalang.ast.expr.Expression;
 import org.walkmod.javalang.ast.expr.IntegerLiteralExpr;
 import org.walkmod.javalang.ast.expr.MethodCallExpr;
@@ -45,6 +48,13 @@ import org.walkmod.walkers.VisitorContext;
  */
 @RequiresSemanticAnalysis
 public class UseCollectionIsEmpty extends VoidVisitorAdapter<VisitorContext> {
+	
+	private static final String IS_EMPTY = "isEmpty";
+	private static Set<String> isEmptyConditionSet = prepareIsEmptyConditionSet();
+	private static Set<String> isNotEmptyConditionSet = prepareIsNotEmptyConditionSet();
+	private static final String SIZE = "size";
+	private static final String ZERO = "0";
+	private static final String ONE = "1";
 
    @Override
    public void visit(BinaryExpr n, VisitorContext ctx) {
@@ -52,51 +62,90 @@ public class UseCollectionIsEmpty extends VoidVisitorAdapter<VisitorContext> {
       if (isValid(n.getOperator())) {
          Expression left = n.getLeft();
          Expression right = n.getRight();
-
-         Expression numberExpr = null;
-         Expression methodExpr = null;
-
-         if (left instanceof MethodCallExpr) {
-            if (right instanceof IntegerLiteralExpr) {
-               numberExpr = right;
-               methodExpr = left;
-            }
-         } else if (left instanceof IntegerLiteralExpr) {
-            if (right instanceof MethodCallExpr) {
-               numberExpr = left;
-               methodExpr = right;
-            }
-         }
-         if (methodExpr != null) {
-            MethodCallExpr mce = (MethodCallExpr) methodExpr;
-            MethodSymbolData msd = mce.getSymbolData();
-            if (msd != null) {
-               if (mce.getName().equals("size") && ("0".equals(((IntegerLiteralExpr) numberExpr).getValue()))) {
-
-                  if (Collection.class.isAssignableFrom(msd.getMethod().getDeclaringClass())) {
-                     Expression newExpr = new MethodCallExpr(mce.getScope(), "isEmpty");
-                     if (n.getOperator().equals(BinaryExpr.Operator.notEquals)) {
-                        newExpr = new UnaryExpr(newExpr, UnaryExpr.Operator.not);
-                     }
+         MethodCallExpr mce = getMethodCallExpression(left, right);
+         if (mce != null) {
+             MethodSymbolData msd = mce.getSymbolData();
+             if (Collection.class.isAssignableFrom(msd.getMethod().getDeclaringClass())) {
+            	 if(isEmptyCondition(left, n.getOperator(), right)){
+                	 Expression newExpr = new MethodCallExpr(mce.getScope(), IS_EMPTY);
+                     n.getParentNode().replaceChildNode(n, newExpr);
+                 } else if (isNotEmptyCondition(left, n.getOperator(), right)){
+                	 Expression newExpr = new MethodCallExpr(mce.getScope(), IS_EMPTY);
+                	 newExpr = new UnaryExpr(newExpr, UnaryExpr.Operator.not);
 
                      n.getParentNode().replaceChildNode(n, newExpr);
-                  }
-               } else if (n.getOperator().equals(BinaryExpr.Operator.greater) && mce.getName().equals("size")
-                     && ("1".equals(((IntegerLiteralExpr) numberExpr).getValue()))) {
-
-                  if (msd.getMethod().getDeclaringClass().isAssignableFrom(Collection.class)) {
-                     n.getParentNode().replaceChildNode(n,
-                           new UnaryExpr(new MethodCallExpr(mce.getScope(), "isEmpty"), UnaryExpr.Operator.not));
-                  }
-               }
-            }
+                 }
+             }
          }
       }
    }
 
-   private boolean isValid(BinaryExpr.Operator op) {
-      return op.equals(BinaryExpr.Operator.equals) || op.equals(BinaryExpr.Operator.notEquals)
-            || op.equals(BinaryExpr.Operator.greater) || op.equals(BinaryExpr.Operator.less);
+   private MethodCallExpr getMethodCallExpression(Expression left, Expression right) {
+	   MethodCallExpr methodExpr = null;
+
+       if (left instanceof MethodCallExpr) {
+    	   methodExpr = (MethodCallExpr)left;
+       } else if (right instanceof MethodCallExpr) {
+           methodExpr = (MethodCallExpr)right;
+       }
+       
+       return methodExpr;
    }
 
+private boolean isNotEmptyCondition(Expression left, Operator operator,
+		Expression right) {
+	return isNotEmptyConditionSet.contains(newCondition(getExpression(left), operator, getExpression(right)));
+}
+
+private boolean isEmptyCondition(Expression left, Operator operator,
+		Expression right) {
+	return isEmptyConditionSet.contains(newCondition(getExpression(left), operator, getExpression(right)));
+}
+
+private String getExpression(Expression expression) {
+    String expStr = null;
+
+    if (expression instanceof MethodCallExpr) {
+    	expStr = ((MethodCallExpr)expression).getName();
+    } else if (expression instanceof IntegerLiteralExpr) {
+    	expStr = ((IntegerLiteralExpr)expression).getValue();
+    }
+	return expStr;
+}
+
+private static Set<String> prepareIsEmptyConditionSet() {
+	   Set<String> isEmptyConditionSet = new HashSet<String>();
+	   isEmptyConditionSet.add(newCondition(SIZE, BinaryExpr.Operator.equals, ZERO));
+	   isEmptyConditionSet.add(newCondition(ZERO, BinaryExpr.Operator.equals, SIZE));
+	   isEmptyConditionSet.add(newCondition(SIZE, BinaryExpr.Operator.lessEquals, ZERO));
+	   isEmptyConditionSet.add(newCondition(ZERO, BinaryExpr.Operator.greaterEquals, SIZE));
+	   isEmptyConditionSet.add(newCondition(SIZE, BinaryExpr.Operator.less, ONE));
+	   isEmptyConditionSet.add(newCondition(ONE, BinaryExpr.Operator.greater, SIZE));
+	   return isEmptyConditionSet;
+   }
+   
+   public static String newCondition(String leftExp, BinaryExpr.Operator operator, String rightExp) {
+	   StringBuilder condBuilder = new StringBuilder();
+	   condBuilder.append(String.valueOf(leftExp));
+	   condBuilder.append(String.valueOf(operator));
+	   condBuilder.append(String.valueOf(rightExp));
+	   return condBuilder.toString();
+   }
+
+   private static Set<String> prepareIsNotEmptyConditionSet() {
+	   Set<String> isNotEmptyConditionSet = new HashSet<String>();
+	   isNotEmptyConditionSet.add(newCondition(SIZE, BinaryExpr.Operator.notEquals, ZERO));
+	   isNotEmptyConditionSet.add(newCondition(ZERO, BinaryExpr.Operator.notEquals, SIZE));
+	   isNotEmptyConditionSet.add(newCondition(SIZE, BinaryExpr.Operator.greater, ZERO));
+	   isNotEmptyConditionSet.add(newCondition(ZERO, BinaryExpr.Operator.less, SIZE));
+	   isNotEmptyConditionSet.add(newCondition(SIZE, BinaryExpr.Operator.greaterEquals, ONE));
+	   isNotEmptyConditionSet.add(newCondition(ONE, BinaryExpr.Operator.lessEquals, SIZE));
+	   return isNotEmptyConditionSet;
+   }
+
+private boolean isValid(BinaryExpr.Operator op) {
+      return op.equals(BinaryExpr.Operator.equals) || op.equals(BinaryExpr.Operator.notEquals)
+            || op.equals(BinaryExpr.Operator.greater) || op.equals(BinaryExpr.Operator.greaterEquals)
+            || op.equals(BinaryExpr.Operator.less) || op.equals(BinaryExpr.Operator.lessEquals);
+   }
 }

@@ -75,13 +75,17 @@ public class UseCollectionIsEmpty extends VoidVisitorAdapter<VisitorContext> {
 
                   if (Collection.class.isAssignableFrom(msd.getMethod().getDeclaringClass())) {
                      Expression newExpr = new MethodCallExpr(mce.getScope(), "isEmpty");
-                     if (n.getOperator().equals(BinaryExpr.Operator.notEquals)) {
+                     if (n.getOperator().equals(BinaryExpr.Operator.notEquals) ||
+                             n.getOperator().equals(BinaryExpr.Operator.greater)) {
                         newExpr = new UnaryExpr(newExpr, UnaryExpr.Operator.not);
                      }
 
                      n.getParentNode().replaceChildNode(n, newExpr);
                   }
-               } else if (n.getOperator().equals(BinaryExpr.Operator.greater) && mce.getName().equals("size")
+               } else if (
+                       (n.getOperator().equals(BinaryExpr.Operator.greater)
+                       || n.getOperator().equals(BinaryExpr.Operator.greaterEquals))
+                               && mce.getName().equals("size")
                      && ("1".equals(((IntegerLiteralExpr) numberExpr).getValue()))) {
 
                   if (msd.getMethod().getDeclaringClass().isAssignableFrom(Collection.class)) {

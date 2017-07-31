@@ -44,43 +44,45 @@ public class RemoveUnusedMethodParameters extends VoidVisitorAdapter<VisitorCont
                   if (!RefactoringUtils.overrides(md)) {
                      Method method = methodDefinition.getMethod();
 
-                     String clazzName = method.getDeclaringClass().getName();
-                     List<Parameter> params = md.getParameters();
-                     String paramsString = "";
-                     String varsString = "";
-                     Iterator<Parameter> it = params.iterator();
-                     boolean isValid = true;
+                     if (!method.getDeclaringClass().isInterface()) {
+                        String clazzName = method.getDeclaringClass().getName();
+                        List<Parameter> params = md.getParameters();
+                        String paramsString = "";
+                        String varsString = "";
+                        Iterator<Parameter> it = params.iterator();
+                        boolean isValid = true;
 
-                     while (it.hasNext() && isValid) {
-                        Parameter p = it.next();
-                        if (p != n) {
-                           if (varsString.length() > 0) {
-                              varsString += ", ";
+                        while (it.hasNext() && isValid) {
+                           Parameter p = it.next();
+                           if (p != n) {
+                              if (varsString.length() > 0) {
+                                 varsString += ", ";
+                              }
+                              varsString += p.getId().getName();
                            }
-                           varsString += p.getId().getName();
-                        }
-                        SymbolData sd_param = p.getSymbolData();
-                        if (sd_param != null) {
-                           if (paramsString.length() > 0) {
-                              paramsString += ", ";
+                           SymbolData sd_param = p.getSymbolData();
+                           if (sd_param != null) {
+                              if (paramsString.length() > 0) {
+                                 paramsString += ", ";
+                              }
+                              paramsString += sd_param.getClazz().getName() + " " + p.getId().getName();
+
+                           } else {
+                              isValid = false;
                            }
-                           paramsString += sd_param.getClazz().getName() + " " + p.getId().getName();
-
-                        } else {
-                           isValid = false;
                         }
-                     }
-                     if (isValid) {
+                        if (isValid) {
 
-                        if (refactoringRules == null) {
-                           RefactorConfigurationController controller = new RefactorConfigurationController();
-                           refactoringRules = controller.getMethodRefactorRules(ctx);
-                           refactoringVisitors = controller.getRefactoringVisitors(ctx);
+                           if (refactoringRules == null) {
+                              RefactorConfigurationController controller = new RefactorConfigurationController();
+                              refactoringRules = controller.getMethodRefactorRules(ctx);
+                              refactoringVisitors = controller.getRefactoringVisitors(ctx);
+                           }
+
+                           refactoringRules.put(clazzName + ":" + method.getName() + "(" + paramsString + ")",
+                                   clazzName + ":" + method.getName() + "(" + varsString + ")");
+                           refactoringVisitors.put(method, new ParameterRemover(n.getId().getName()));
                         }
-
-                        refactoringRules.put(clazzName + ":" + method.getName() + "(" + paramsString + ")",
-                              clazzName + ":" + method.getName() + "(" + varsString + ")");
-                        refactoringVisitors.put(method, new ParameterRemover(n.getId().getName()));
                      }
                   }
                }

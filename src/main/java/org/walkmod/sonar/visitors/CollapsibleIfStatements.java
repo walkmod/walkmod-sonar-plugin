@@ -46,14 +46,14 @@ public class CollapsibleIfStatements extends  VoidVisitorAdapter<VisitorContext>
                Statement thisElseStmt = n.getElseStmt();
                if (thisElseStmt == null) {
                   try{
-                  Expression rightExpression = parentIf.getCondition();
+                  Expression rightExpression = parentIf.getCondition().clone();
                   if (rightExpression instanceof BinaryExpr) {
-                     rightExpression = new EnclosedExpr(parentIf.getCondition().clone());
+                     rightExpression = new EnclosedExpr(rightExpression);
                   }
 
-                  Expression leftExpression = n.getCondition();
+                  Expression leftExpression = n.getCondition().clone();
                   if (leftExpression instanceof BinaryExpr) {
-                     leftExpression = new EnclosedExpr(n.getCondition().clone());
+                     leftExpression = new EnclosedExpr(leftExpression);
                   }
 
                   BinaryExpr condition = new BinaryExpr(rightExpression, leftExpression, BinaryExpr.Operator.and);

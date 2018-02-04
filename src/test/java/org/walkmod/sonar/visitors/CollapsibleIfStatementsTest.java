@@ -25,6 +25,28 @@ public class CollapsibleIfStatementsTest {
       Assert.assertNull(stmt.getStmts());
       Assert.assertTrue(ifStmt.getCondition() instanceof BinaryExpr);
    }
+
+   @Test
+   public void testGeneratesConditionsWithNewNodes() throws Exception {
+      String code = "public class Foo {\n" +
+              "public void bar(String name, String other) {\n" +
+              "  if (name.equals(other)) {\n" +
+              "    if (other.equals(name)) {\n" +
+              "      System.out.println(name);\n" +
+              "    }\n" +
+              "  }\n" +
+              "}\n" +
+              "}";
+      CollapsibleIfStatements visitor = new CollapsibleIfStatements();
+      CompilationUnit cu = ASTManager.parse(code);
+      visitor.visit(cu, null);
+      MethodDeclaration md = (MethodDeclaration) cu.getTypes().get(0).getMembers().get(0);
+      BlockStmt block = md.getBody();
+      IfStmt ifStmt = (IfStmt) block.getStmts().get(0);
+      BinaryExpr expr = (BinaryExpr) ifStmt.getCondition();
+      Assert.assertTrue(expr.getLeft().isNewNode());
+      Assert.assertTrue(expr.getRight().isNewNode());
+   }
    
    @Test
    public void test2() throws Exception{

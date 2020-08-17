@@ -55,8 +55,7 @@ public class LocalVarsShouldComplyWithNamingConvention extends VoidVisitorAdapte
       String result = "";
       boolean toUpperCase = false;
       for (int i = 0; i < letters.length; i++) {
-         if (letters[i] == '$' || letters[i] == '_') {
-            i++;
+         if (letters[i] == '$' || letters[i] == '_') {            
             toUpperCase = true;
          } else {
             if (toUpperCase) {
